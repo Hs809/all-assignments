@@ -7,7 +7,32 @@
 */
 
 function isPalindrome(str) {
-  return true;
+  // const reversStr = str
+  //   .split("")
+  //   .reverse()
+  //   .join("")
+  //   .toLowerCase()
+  //   .replace(/ /g, "");
+  // console.log({
+  //   str: str
+  //     .toLowerCase()
+  //     .replace(/ /g, "")
+  //     .replace(/[&\/\\#, +()$~%.'":*?<>{}!]/g, ""),
+  //   reversStr: reversStr.replace(/[&\/\\#, +()$~%.'":*?<>{}!]/g, ""),
+  // });
+  // if (
+  //   str
+  //     .toLowerCase()
+  //     .replace(/ /g, "")
+  //     .replace(/[&\/\\#, +()$~%.'":*?<>{}!]/g, "") ===
+  //   reversStr.replace(/[&\/\\#, +()$~%.'":*?<>{}!]/g, "")
+  // ) {
+  //   return true;
+  // }
+  // return false;
+  const cleanStr = str.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const reversedStr = cleanStr.split("").reverse().join("");
+  return cleanStr === reversedStr;
 }
 
 module.exports = isPalindrome;

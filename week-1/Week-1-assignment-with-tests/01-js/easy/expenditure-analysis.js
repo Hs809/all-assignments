@@ -9,7 +9,58 @@
 */
 
 function calculateTotalSpentByCategory(transactions) {
-  return [];
+  const totalAmountSpentInCategory = [];
+  if (transactions.length === 1) {
+    totalAmountSpentInCategory.push({
+      category: transactions[0].category,
+      totalSpent: transactions[0].price,
+    });
+    return totalAmountSpentInCategory;
+  }
+  transactions.forEach((transaction) => {
+    const indexOfCategory = totalAmountSpentInCategory.findIndex(
+      (totalAmountByCategory) =>
+        totalAmountByCategory.category === transaction.category
+    );
+    if (indexOfCategory !== -1) {
+      totalAmountSpentInCategory[indexOfCategory].totalSpent +=
+        transaction.price;
+    } else {
+      totalAmountSpentInCategory.push({
+        category: transaction.category,
+        totalSpent: transaction.price,
+      });
+    }
+  });
+  return totalAmountSpentInCategory;
 }
 
+const transactions = [
+  {
+    itemName: "rice",
+    category: "grocery",
+    price: 80,
+  },
+  {
+    itemName: "rice",
+    category: "bakery",
+    price: 80,
+  },
+  {
+    itemName: "rice",
+    category: "grocery",
+    price: 80,
+  },
+  {
+    itemName: "rice",
+    category: "bakery",
+    price: 80,
+  },
+  {
+    itemName: "rice",
+    category: "meat",
+    price: 80,
+  },
+];
+// calculateTotalSpentByCategory(transactions);
 module.exports = calculateTotalSpentByCategory;
