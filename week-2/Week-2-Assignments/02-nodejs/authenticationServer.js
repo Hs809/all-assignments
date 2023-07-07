@@ -29,9 +29,66 @@
   Testing the server - run `npm run test-authenticationServer` command in terminal
  */
 
-const express = require("express")
+const express = require("express");
 const PORT = 3000;
 const app = express();
+const { v4: uuidv4 } = require("uuid");
+const fs = require("fs");
 // write your logic here, DONT WRITE app.listen(3000) when you're running tests, the tests will automatically start the server
+const usersData = fs.readFileSync("./profile.txt", "utf8") || [];
 
+const writeFile = (content) => {
+  fs.writeFile("./sample.txt", content, (err) => {
+    if (err) {
+      console.error(err);
+    }
+    // file written successfully
+  });
+};
+
+app.post("/signup", (req, res) => {
+  try {
+    console.log({ usersData });
+    const { userName, password, firstName, lastName } = req.body;
+    const userExits = usersData.find((user) => user.username === userName);
+    if (userExits) {
+      res.status(404).send("User exists");
+    } else {
+      usersData.push({ firstName, lastName, userName, password, id: uuidv4() });
+      writeFile(userData);
+      res.status(200);
+    }
+  } catch (error) {
+    res.status(400);
+  }
+});
+app.get("/login", (req, res) => {
+  try {
+    console.log({ usersData });
+    const { userName, password } = req.body;
+    usersData.forEach((user) => {
+      if (user.userName === userName && user.password === password) {
+        res.status(200).send({ firstName, lastName, id });
+      }
+    });
+    res.status(400);
+  } catch (error) {
+    res.status(400);
+  }
+});
+app.get("/data", (req, res) => {
+  try {
+    console.log({ usersData });
+    const updatedUserData = usersData.map((user) => {
+      return {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        id: user.id,
+      };
+    });
+    res.status(200).send(updatedUserData);
+  } catch (error) {
+    res.status(400);
+  }
+});
 module.exports = app;

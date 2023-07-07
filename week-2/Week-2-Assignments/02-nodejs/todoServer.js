@@ -39,11 +39,45 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-const express = require('express');
-const bodyParser = require('body-parser');
-
+const express = require("express");
+const bodyParser = require("body-parser");
+const todos = [];
 const app = express();
+const { v4: uuidv4 } = require("uuid");
 
 app.use(bodyParser.json());
+
+app.get("/todos", (req, res) => {
+  res.status(200).send(todos);
+});
+app.get("/todos/:id", (req, res) => {
+  const { id } = req.params;
+  const index = todos.findIndex((todo) => todo.id === parseInt(id));
+  if (!todos[index]) {
+    res.status(404);
+  }
+  res.status(200).send(todos[index]);
+});
+app.post("/todos", (req, res) => {
+  const { title, description } = req.body;
+  const id = uuidv4();
+  todos.push({ title, description, id });
+  res.status(200).send(id);
+});
+app.put("/todos/:id", (req, res) => {
+  const { id } = req.params;
+  const {
+    updatedTodo: { title, description },
+  } = req.body;
+  const index = todos.findIndex((todo) => todo.id === parseInt(id));
+  todos[index] = { title, description };
+  res.status(201).send(todos[todos.length - 1]);
+});
+app.delete("/todos/:id", (req, res) => {
+  const { id } = req.params;
+  const index = todos.findIndex((todo) => todo.id === parseInt(id));
+  todos.splice(index, 1);
+  res.status(201);
+});
 
 module.exports = app;
